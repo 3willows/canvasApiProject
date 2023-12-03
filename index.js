@@ -9,6 +9,7 @@ const render = Render.create({
   element: document.body,
   engine: engine,
   options: {
+    wireframes: false,
     width: width,
     height: height
   }
@@ -39,9 +40,20 @@ const walls = [
 
 World.add(world, walls);
 
-
 //random shapes
 
-for (let i = 0; i < 20; i++) {
-  World.add(world, Bodies.rectangle(width*Math.random(), height*Math.random(), 50, 50));
+for (let i = 0; i < 30; i++) {
+  if (Math.random() > 0.5) {
+    World.add(
+      world,
+      Bodies.rectangle(width * Math.random(), height * Math.random(), 50, 50));
+  }
+  else {
+    World.add(
+      world,
+      Bodies.circle(width * Math.random(), height * Math.random(), 35,
+        {
+          // render: { fillStyle: 'red' }
+        }));
+  }
 }
