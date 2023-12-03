@@ -1,12 +1,14 @@
 const { Engine, Render, Runner, World, Bodies, Body, Events } = Matter;
 
-const cells = 10;
-const width = 600;
-const height = 600;
-const speed = 5;
+const width = window.innerWidth;
+const height = window.innerHeight;
+const cellsHorizontal = 5;
+const cellsVertical = 5;
+const speed = window.innerWidth/200;
 
-const unitLength = width / cells;
-const wallThickness = unitLength / 20;
+const unitLengthH = height / cellsHorizontal;
+const unitLengthW = width / cellsVertical;
+const wallThickness = (unitLengthH + unitLengthW) / 40;
 
 const engine = Engine.create();
 const { world } = engine;
@@ -48,7 +50,6 @@ const walls = [
 World.add(world, walls);
 
 // Maze generation
-
 const shuffle = (arr) => {
   let counter = arr.length;
 
@@ -63,26 +64,26 @@ const shuffle = (arr) => {
   return arr;
 }
 
-const gridSpaces = Array(cells)
+const gridSpaces = Array(cellsVertical)
   .fill(null)
-  .map(() => Array(cells).fill(false))
+  .map(() => Array(cellsHorizontal).fill(false))
 
 // console.log(gridSpaces);
 
-const verticals = Array(cells)
+const verticals = Array(cellsVertical)
   .fill(null)
-  .map(() => Array(cells - 1).fill(false))
+  .map(() => Array(cellsHorizontal - 1).fill(false))
 
 // console.log(verticals);
 
-const horizontals = Array(cells - 1)
+const horizontals = Array(cellsVertical - 1)
   .fill(null)
-  .map(() => Array(cells).fill(false))
+  .map(() => Array(cellsHorizontal).fill(false))
 
 // console.log(horizontals);
 
-const startRow = Math.floor((Math.random()) * cells);
-const startColumn = Math.floor((Math.random()) * cells);
+const startRow = Math.floor((Math.random()) * cellsVertical);
+const startColumn = Math.floor((Math.random()) * cellsHorizontal);
 
 // console.log(startRow, startColumn);
 
@@ -106,8 +107,8 @@ const stepThroughCell = (row, column) => {
 
   for (let neighbour of neighbours) {
     const [nextRow, nextColumn, direction] = neighbour;
-    if (nextRow < 0 || nextRow >= cells ||
-      nextColumn < 0 || nextColumn >= cells) {
+    if (nextRow < 0 || nextRow >= cellsVertical ||
+      nextColumn < 0 || nextColumn >= cellsHorizontal) {
       continue;
     }
 
@@ -151,7 +152,7 @@ horizontals.forEach((row, rowIndex) => {
     if (truthValue === true) {
       return;
     }
-    const wall = Bodies.rectangle(unitLength / 2 + columIndex * unitLength, unitLength * (rowIndex + 1), unitLength, wallThickness, {
+    const wall = Bodies.rectangle(unitLengthW / 2 + columIndex * unitLengthW, unitLengthH * (rowIndex + 1), unitLengthW, wallThickness, {
       label: 'wall',
       isStatic: true
     });
@@ -166,9 +167,9 @@ verticals.forEach((row, rowIndex) => {
       return
     }
     const wall = Bodies.rectangle(
-      unitLength + unitLength * columIndex,
-      unitLength / 2 + unitLength * rowIndex, wallThickness,
-      unitLength,
+      unitLengthW + unitLengthW * columIndex,
+      unitLengthH / 2 + unitLengthH * rowIndex, wallThickness,
+      unitLengthH,
       {
         label: 'wall',
         isStatic: true
@@ -177,17 +178,10 @@ verticals.forEach((row, rowIndex) => {
   })
 })
 
-//example to help with my bearings shape
+const goalX = unitLengthW / 2 + unitLengthW * (Math.floor(Math.random() * cellsHorizontal));
+const goalY = unitLengthH / 2 + unitLengthH * (Math.floor(Math.random() * cellsVertical));
 
-// const horizontalWall = Bodies.rectangle(unitLength/2 , unitLength , unitLength, 30, {
-//   isStatic: true
-// });
-// World.add(world, horizontalWall);
-
-const goalX = unitLength / 2 + unitLength * (Math.floor(Math.random() * cells));
-const goalY = unitLength / 2 + unitLength * (Math.floor(Math.random() * cells));
-
-const goal = Bodies.rectangle(goalX, goalY, unitLength / 2, unitLength / 2, {
+const goal = Bodies.rectangle(goalX, goalY, unitLengthW / 2, unitLengthH / 2, {
   isStatic: true,
   wireframes: false,
   render: { fillStyle: 'red' },
@@ -196,10 +190,12 @@ const goal = Bodies.rectangle(goalX, goalY, unitLength / 2, unitLength / 2, {
 
 World.add(world, goal);
 
-const ballX = unitLength / 2 + unitLength * (Math.floor(Math.random() * cells));
-const ballY = unitLength / 2 + unitLength * (Math.floor(Math.random() * cells));
+const ballX = unitLengthW / 2 + unitLengthW * (Math.floor(Math.random() * cellsVertical));
+const ballY = unitLengthH / 2 + unitLengthH * (Math.floor(Math.random() * cellsHorizontal));
 
-const ball = Bodies.circle(ballX, ballY, unitLength / 4, {
+const ballRadius = Math.min(unitLengthW, unitLengthH) / 4;
+
+const ball = Bodies.circle(ballX, ballY, ballRadius, {
   isStatic: false,
   wireframes: false,
   render: { fillStyle: 'red' },
