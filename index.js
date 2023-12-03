@@ -1,8 +1,9 @@
-const { Engine, Render, Runner, World, Bodies } = Matter;
+const { Engine, Render, Runner, World, Bodies, Body } = Matter;
 
 const cells = 3;
 const width = 600;
 const height = 600;
+const speed = 5;
 
 const unitLength = width / cells;
 const wallThickness = unitLength / 20;
@@ -179,9 +180,10 @@ verticals.forEach((row, rowIndex) => {
 const goalX = unitLength / 2 + unitLength * (Math.floor(Math.random() * cells));
 const goalY = unitLength / 2 + unitLength * (Math.floor(Math.random() * cells));
 
-const goal = Bodies.rectangle(goalX, goalY, unitLength/2, unitLength/2, {
+const goal = Bodies.rectangle(goalX, goalY, unitLength / 2, unitLength / 2, {
   isStatic: true,
-  wireframe: false
+  wireframes: false,
+  render: { fillStyle: 'red' }
 });
 
 World.add(world, goal);
@@ -190,8 +192,24 @@ const ballX = unitLength / 2 + unitLength * (Math.floor(Math.random() * cells));
 const ballY = unitLength / 2 + unitLength * (Math.floor(Math.random() * cells));
 
 const ball = Bodies.circle(ballX, ballY, unitLength / 4, {
-  isStatic: true,
-  wireframe: false
+  isStatic: false,
+  wireframes: false,
+  render: { fillStyle: 'red' }
 });
 
 World.add(world, ball);
+
+document.addEventListener('keydown', e => {
+
+  const { x, y } = ball.velocity;
+  console.log(x, y);
+  if (e.key === 'w' || e.key === 'ArrowUp') {
+    Body.setVelocity(ball, { x: x, y: y - speed });
+  }
+  if (e.key === 's' || e.key === 'ArrowDown')
+  Body.setVelocity(ball, { x: x, y: y + speed });
+  if (e.key === 'a' || e.key === 'ArrowLeft')
+  Body.setVelocity(ball, { x: x - speed, y: y + speed });
+  if (e.key === 'd' || e.key === 'ArrowRight')
+  Body.setVelocity(ball, { x: x +  speed, y: y });
+})
