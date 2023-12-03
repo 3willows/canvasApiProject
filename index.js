@@ -5,6 +5,7 @@ const width = 600;
 const height = 600;
 
 const unitLength = width / cells;
+const wallThickness = unitLength/20;
 
 const engine = Engine.create();
 const { world } = engine;
@@ -144,7 +145,7 @@ horizontals.forEach((row, rowIndex) =>{
     if (truthValue === true){
       return;
     }
-    const wall = Bodies.rectangle(unitLength/2 + columIndex*unitLength, unitLength * (rowIndex+ 1), unitLength, 30, {
+    const wall = Bodies.rectangle(unitLength/2 + columIndex*unitLength, unitLength * (rowIndex+ 1), unitLength, wallThickness, {
       isStatic: true
     });
     World.add(world, wall);
@@ -159,7 +160,7 @@ verticals.forEach((row, rowIndex) =>{
     }
     const wall = Bodies.rectangle(
       unitLength + unitLength*columIndex,
-      unitLength/2 + unitLength*rowIndex, 30, 
+      unitLength/2 + unitLength*rowIndex, wallThickness, 
       unitLength, 
       {
       isStatic: true
