@@ -1,6 +1,6 @@
 const { Engine, Render, Runner, World, Bodies } = Matter;
 
-const cells = 5;
+const cells = 3;
 const width = 600;
 const height = 600;
 
@@ -40,20 +40,69 @@ World.add(world, walls);
 
 // Maze generation
 
+const shuffle = (arr) => {
+  let counter = arr.length;
+
+  while (counter > 0) {
+    const index = Math.floor(Math.random() * counter);
+    counter--;
+
+    const temp = arr[0];
+    arr[0] = arr[index];
+    arr[index] = temp;
+  }
+  return arr;
+}
+
 const gridSpaces = Array(cells)
   .fill(null)
   .map(() => Array(cells).fill(false))
 
-console.log(gridSpaces);
+// console.log(gridSpaces);
 
 const verticals = Array(cells)
   .fill(null)
-  .map(() => Array(cells-1).fill(false))
+  .map(() => Array(cells - 1).fill(false))
 
-console.log(verticals);
+// console.log(verticals);
 
 const horizontals = Array(cells)
   .fill(null)
-  .map(() => Array(cells-1).fill(false))
+  .map(() => Array(cells - 1).fill(false))
 
-console.log(horizontals);
+// console.log(horizontals);
+
+const startRow = Math.floor((Math.random()) * cells);
+const startColumn = Math.floor((Math.random()) * cells);
+
+// console.log(startRow, startColumn);
+
+const stepThroughCell = (row, column) => {
+  // return if I had visited before
+  if (gridSpaces[row][column]) {
+    return;
+  }
+  // mark cell as visited
+  gridSpaces[row][column] = true;
+  // For each neighbour
+  const neighbours = shuffle([
+    [row + 1, column],
+    [row - 1, column],
+    [row, column + 1],
+    [row, column - 1]
+  ]);
+
+  console.log(neighbours);
+  // check neighbour is out of bounds
+
+  // if we have visited the neighbours, continue to the next neighbour
+
+  // remove wall
+
+  // visit the next cell 
+
+}
+
+stepThroughCell(1, 1)
+
+// console.log(gridSpaces);
