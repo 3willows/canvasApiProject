@@ -1,8 +1,8 @@
-const { Engine, Render, Runner, World, Bodies, MouseConstraint, Mouse } = Matter;
+const { Engine, Render, Runner, World, Bodies } = Matter;
 
 const engine = Engine.create();
 const { world } = engine;
-const width = 800;
+const width = 600;
 const height = 600;
 
 const render = Render.create({
@@ -17,31 +17,21 @@ const render = Render.create({
 Render.run(render);
 Runner.run(Runner.create(), engine);
 
-World.add(world, MouseConstraint.create(engine, {
-  mouse: Mouse.create(render.canvas)
-}))
-
 //wall
 const walls = [
-  Bodies.rectangle(400, 0, 800, 50, {
+  Bodies.rectangle(width/2, 0, width, 50, {
     isStatic: true
   }),
-  Bodies.rectangle(400, 600, 800, 50, {
+  Bodies.rectangle(width/2, height, width, 50, {
     isStatic: true
   }),
-  Bodies.rectangle(0, 300, 50, 600, {
+  Bodies.rectangle(0, height/2, 50, height, {
     isStatic: true
   }),
-  Bodies.rectangle(800, 300, 50, 600, {
+  Bodies.rectangle(width, height/2, 50, height, {
     isStatic: true
   })
 ];
 
 World.add(world, walls);
 
-
-//random shapes
-
-for (let i = 0; i < 20; i++) {
-  World.add(world, Bodies.rectangle(width*Math.random(), height*Math.random(), 50, 50));
-}
