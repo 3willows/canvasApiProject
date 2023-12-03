@@ -4,6 +4,8 @@ const cells = 3;
 const width = 600;
 const height = 600;
 
+const unitLength = width / cells;
+
 const engine = Engine.create();
 const { world } = engine;
 
@@ -66,7 +68,7 @@ const verticals = Array(cells)
 
 // console.log(verticals);
 
-const horizontals = Array(cells -1)
+const horizontals = Array(cells - 1)
   .fill(null)
   .map(() => Array(cells).fill(false))
 
@@ -106,33 +108,69 @@ const stepThroughCell = (row, column) => {
     if (gridSpaces[nextRow][nextColumn]) {
       continue;
     }
-      console.log([nextRow], [nextColumn], direction);
+    // console.log([nextRow], [nextColumn], direction);
     // remove wall
 
-    if (direction === "left"){
-      verticals[row][column-1] = true;
+    if (direction === "left") {
+      verticals[row][column - 1] = true;
     }
-    if (direction === "right"){
+    if (direction === "right") {
       verticals[row][column] = true;
     }
-    if (direction === "up"){
-      horizontals[row-1][column] = true;
+    if (direction === "up") {
+      horizontals[row - 1][column] = true;
     }
-    if (direction === "down"){
+    if (direction === "down") {
       horizontals[row][column] = true;
     }
-    
-      console.log(verticals, horizontals);
 
     // return [nextRow, nextColumn];
-    break;
+    stepThroughCell(nextRow, nextColumn);
+
   }
   // visit the next cell 
 }
 
 //call stepThroughCell again
 
-// stepThroughCell(startRow, startColumn)
-stepThroughCell(1, 1)
+stepThroughCell(startRow, startColumn)
 
-// console.log(gridSpaces);
+console.log(gridSpaces);
+console.log(verticals, horizontals);
+
+horizontals.forEach((row, rowIndex) =>{
+  // console.log(row);
+  row.forEach((truthValue, columIndex) =>{
+    if (truthValue === true){
+      return;
+    }
+    const wall = Bodies.rectangle(unitLength/2 + columIndex*unitLength, unitLength * (rowIndex+ 1), unitLength, 30, {
+      isStatic: true
+    });
+    World.add(world, wall);
+  })
+})
+
+verticals.forEach((row, rowIndex) =>{
+  console.log(row);
+  row.forEach((truthValue, columIndex) =>{
+    if (truthValue === true){
+      return
+    }
+    const wall = Bodies.rectangle(
+      unitLength + unitLength*columIndex,
+      unitLength/2 + unitLength*rowIndex, 30, 
+      unitLength, 
+      {
+      isStatic: true
+    });
+    World.add(world, wall);
+  })
+})
+
+//example to help with my bearings shape
+
+// const horizontalWall = Bodies.rectangle(unitLength/2 , unitLength , unitLength, 30, {
+//   isStatic: true
+// });
+// World.add(world, horizontalWall);
