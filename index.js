@@ -5,7 +5,7 @@ const width = 600;
 const height = 600;
 
 const unitLength = width / cells;
-const wallThickness = unitLength/20;
+const wallThickness = unitLength / 20;
 
 const engine = Engine.create();
 const { world } = engine;
@@ -139,32 +139,32 @@ stepThroughCell(startRow, startColumn)
 console.log(gridSpaces);
 console.log(verticals, horizontals);
 
-horizontals.forEach((row, rowIndex) =>{
+horizontals.forEach((row, rowIndex) => {
   // console.log(row);
-  row.forEach((truthValue, columIndex) =>{
-    if (truthValue === true){
+  row.forEach((truthValue, columIndex) => {
+    if (truthValue === true) {
       return;
     }
-    const wall = Bodies.rectangle(unitLength/2 + columIndex*unitLength, unitLength * (rowIndex+ 1), unitLength, wallThickness, {
+    const wall = Bodies.rectangle(unitLength / 2 + columIndex * unitLength, unitLength * (rowIndex + 1), unitLength, wallThickness, {
       isStatic: true
     });
     World.add(world, wall);
   })
 })
 
-verticals.forEach((row, rowIndex) =>{
+verticals.forEach((row, rowIndex) => {
   console.log(row);
-  row.forEach((truthValue, columIndex) =>{
-    if (truthValue === true){
+  row.forEach((truthValue, columIndex) => {
+    if (truthValue === true) {
       return
     }
     const wall = Bodies.rectangle(
-      unitLength + unitLength*columIndex,
-      unitLength/2 + unitLength*rowIndex, wallThickness, 
-      unitLength, 
+      unitLength + unitLength * columIndex,
+      unitLength / 2 + unitLength * rowIndex, wallThickness,
+      unitLength,
       {
-      isStatic: true
-    });
+        isStatic: true
+      });
     World.add(world, wall);
   })
 })
@@ -175,3 +175,15 @@ verticals.forEach((row, rowIndex) =>{
 //   isStatic: true
 // });
 // World.add(world, horizontalWall);
+
+const goalX = unitLength / 2 + unitLength * (Math.floor(Math.random() * 3));
+
+
+const goalY = unitLength / 2 + unitLength * (Math.floor(Math.random() * 3));
+
+console.log(goalX, goalY)
+const goal = Bodies.circle(goalX, goalY, unitLength / 4, {
+  isStatic: true
+});
+
+World.add(world, goal);
