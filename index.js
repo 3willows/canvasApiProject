@@ -28,15 +28,19 @@ Runner.run(Runner.create(), engine);
 //wall
 const walls = [
   Bodies.rectangle(width / 2, 0, width, wallThickness, {
+    label: 'borders',
     isStatic: true
   }),
   Bodies.rectangle(width / 2, height, width, wallThickness, {
+    label: 'borders',
     isStatic: true
   }),
   Bodies.rectangle(0, height / 2, wallThickness, height, {
+    label: 'borders',
     isStatic: true
   }),
   Bodies.rectangle(width, height / 2, wallThickness, height, {
+    label: 'borders',
     isStatic: true
   })
 ];
@@ -148,6 +152,7 @@ horizontals.forEach((row, rowIndex) => {
       return;
     }
     const wall = Bodies.rectangle(unitLength / 2 + columIndex * unitLength, unitLength * (rowIndex + 1), unitLength, wallThickness, {
+      label: 'wall',
       isStatic: true
     });
     World.add(world, wall);
@@ -165,6 +170,7 @@ verticals.forEach((row, rowIndex) => {
       unitLength / 2 + unitLength * rowIndex, wallThickness,
       unitLength,
       {
+        label: 'wall',
         isStatic: true
       });
     World.add(world, wall);
@@ -218,13 +224,20 @@ document.addEventListener('keydown', e => {
 
 // Win Condition
 
-Events.on(engine, 'collisionStart', event =>
-{ event.pairs.forEach((collision) => 
-  {
+Events.on(engine, 'collisionStart', event => {
+
+  event.pairs.forEach((collision) => {
     const labels = ['ball', 'goal'];
 
     if (labels.includes(collision.bodyA.label) &&
-    labels.includes(collision.bodyB.label)){
-    console.log('User wins!');
+      labels.includes(collision.bodyB.label)) {
+      console.log('User wins!');
+      world.gravity.y = 1;
+      world.bodies.forEach(body =>{
+        if (body.label === 'wall'){
+          Body.setStatic(body, false);
+        }
+      })
     }
-  })});
+  })
+});
