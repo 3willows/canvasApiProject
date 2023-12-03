@@ -4,7 +4,7 @@ const width = window.innerWidth;
 const height = window.innerHeight;
 const cellsHorizontal = 5;
 const cellsVertical = 5;
-const speed = window.innerWidth/200;
+const speed = window.innerWidth / 200;
 
 const unitLengthH = height / cellsHorizontal;
 const unitLengthW = width / cellsVertical;
@@ -18,7 +18,7 @@ const render = Render.create({
   element: document.body,
   engine: engine,
   options: {
-    wireframe: true,
+    wireframes: false,
     width: width,
     height: height
   }
@@ -153,6 +153,7 @@ horizontals.forEach((row, rowIndex) => {
       return;
     }
     const wall = Bodies.rectangle(unitLengthW / 2 + columIndex * unitLengthW, unitLengthH * (rowIndex + 1), unitLengthW, wallThickness, {
+      render: { fillStyle: 'red' },
       label: 'wall',
       isStatic: true
     });
@@ -171,6 +172,7 @@ verticals.forEach((row, rowIndex) => {
       unitLengthH / 2 + unitLengthH * rowIndex, wallThickness,
       unitLengthH,
       {
+        render: { fillStyle: 'yellow' },
         label: 'wall',
         isStatic: true
       });
@@ -183,8 +185,7 @@ const goalY = unitLengthH / 2 + unitLengthH * (Math.floor(Math.random() * cellsV
 
 const goal = Bodies.rectangle(goalX, goalY, unitLengthW / 2, unitLengthH / 2, {
   isStatic: true,
-  wireframes: false,
-  render: { fillStyle: 'red' },
+  render: { fillStyle: 'blue' },
   label: 'goal'
 });
 
@@ -197,8 +198,7 @@ const ballRadius = Math.min(unitLengthW, unitLengthH) / 4;
 
 const ball = Bodies.circle(ballX, ballY, ballRadius, {
   isStatic: false,
-  wireframes: false,
-  render: { fillStyle: 'red' },
+  render: { fillStyle: 'green' },
   label: 'ball'
 });
 
@@ -229,8 +229,8 @@ Events.on(engine, 'collisionStart', event => {
       labels.includes(collision.bodyB.label)) {
       console.log('User wins!');
       world.gravity.y = 1;
-      world.bodies.forEach(body =>{
-        if (body.label === 'wall'){
+      world.bodies.forEach(body => {
+        if (body.label === 'wall') {
           Body.setStatic(body, false);
         }
       })
