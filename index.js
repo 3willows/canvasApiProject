@@ -1,6 +1,6 @@
-const { Engine, Render, Runner, World, Bodies, Body } = Matter;
+const { Engine, Render, Runner, World, Bodies, Body, Events } = Matter;
 
-const cells = 3;
+const cells = 10;
 const width = 600;
 const height = 600;
 const speed = 5;
@@ -10,6 +10,7 @@ const wallThickness = unitLength / 20;
 
 const engine = Engine.create();
 const { world } = engine;
+engine.world.gravity.y = 0;
 
 const render = Render.create({
   element: document.body,
@@ -137,8 +138,8 @@ const stepThroughCell = (row, column) => {
 
 stepThroughCell(startRow, startColumn)
 
-console.log(gridSpaces);
-console.log(verticals, horizontals);
+// console.log(gridSpaces);
+// console.log(verticals, horizontals);
 
 horizontals.forEach((row, rowIndex) => {
   // console.log(row);
@@ -154,7 +155,7 @@ horizontals.forEach((row, rowIndex) => {
 })
 
 verticals.forEach((row, rowIndex) => {
-  console.log(row);
+  // console.log(row);
   row.forEach((truthValue, columIndex) => {
     if (truthValue === true) {
       return
@@ -183,7 +184,8 @@ const goalY = unitLength / 2 + unitLength * (Math.floor(Math.random() * cells));
 const goal = Bodies.rectangle(goalX, goalY, unitLength / 2, unitLength / 2, {
   isStatic: true,
   wireframes: false,
-  render: { fillStyle: 'red' }
+  render: { fillStyle: 'red' },
+  label: 'goal'
 });
 
 World.add(world, goal);
@@ -194,7 +196,8 @@ const ballY = unitLength / 2 + unitLength * (Math.floor(Math.random() * cells));
 const ball = Bodies.circle(ballX, ballY, unitLength / 4, {
   isStatic: false,
   wireframes: false,
-  render: { fillStyle: 'red' }
+  render: { fillStyle: 'red' },
+  label: 'ball'
 });
 
 World.add(world, ball);
@@ -202,14 +205,26 @@ World.add(world, ball);
 document.addEventListener('keydown', e => {
 
   const { x, y } = ball.velocity;
-  console.log(x, y);
   if (e.key === 'w' || e.key === 'ArrowUp') {
     Body.setVelocity(ball, { x: x, y: y - speed });
   }
   if (e.key === 's' || e.key === 'ArrowDown')
-  Body.setVelocity(ball, { x: x, y: y + speed });
+    Body.setVelocity(ball, { x: x, y: y + speed });
   if (e.key === 'a' || e.key === 'ArrowLeft')
-  Body.setVelocity(ball, { x: x - speed, y: y + speed });
+    Body.setVelocity(ball, { x: x - speed, y: y + speed });
   if (e.key === 'd' || e.key === 'ArrowRight')
-  Body.setVelocity(ball, { x: x +  speed, y: y });
+    Body.setVelocity(ball, { x: x + speed, y: y });
 })
+
+// Win Condition
+
+Events.on(engine, 'collisionStart', event =>
+{ event.pairs.forEach((collision) => 
+  {
+    const labels = ['ball', 'goal'];
+
+    if (labels.includes(collision.bodyA.label) &&
+    labels.includes(collision.bodyB.label)){
+    console.log('User wins!');
+    }
+  })});
